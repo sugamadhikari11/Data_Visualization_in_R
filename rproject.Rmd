@@ -1,0 +1,842 @@
+---
+title: ""
+author: "Sugam Adhikari"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    citation_package: natbib
+bibliography: reference.bib
+header-includes:
+  - \usepackage{graphicx}
+  - \usepackage{tocloft}
+  - \usepackage{titlesec}
+  - \usepackage{fancyhdr}
+  - \usepackage{bookmark}
+  - \pagestyle{fancy}
+  - \fancyhf{}
+  - \fancyfoot[C]{\thepage}
+  - \renewcommand{\headrulewidth}{0pt}
+  - \titleformat{\chapter}{\normalfont\Large\bfseries}{}{10pt}{\thechapter. }
+  - \titlespacing*{\chapter}{0pt}{-50pt}{20pt}
+  - \setlength{\cftbeforetoctitleskip}{-2cm}
+  - \setlength{\cftaftertoctitleskip}{1cm}
+  - \setcounter{tocdepth}{4}
+  - \setcounter{secnumdepth}{4}
+---
+
+\pagenumbering{gobble}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\centering
+
+\includegraphics[width=0.7\textwidth, height=0.9\textheight, keepaspectratio]{Logo.png}
+
+\vspace{2cm}
+{\Large \textbf{Report of Data Visualization On WBDC Breast Cancer Dataset}\par}
+\vspace{4cm}
+{\small Sugam Adhikari\par}
+{\small
+    Bachelor of Science with Honours in Computer and Data Science \par
+    (Faculty of Computing, Engineering, and the Built Environment) \par
+    Birmingham City University (BCU) \par
+    Sunway College \par
+    Kathmandu, Nepal \par
+    Sugam.Adhikari@mail.bcu.ac.uk \par
+}
+\vfill
+\end{titlepage}
+
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+
+\section{Introduction}
+
+\subsection{Background}
+Breast cancer remains one of the most prevalent forms of cancer affecting women worldwide, with significant implications for public health and clinical practices. According to the World Health Organization, breast cancer accounts for nearly 25% of all cancer cases in women, underscoring the urgency of early detection and accurate diagnosis. The Wisconsin Diagnostic Breast Cancer (WDBC) dataset provides an invaluable resource for researchers and healthcare professionals by offering detailed information on various characteristics of breast cancer tumors.
+
+\subsection{Purpose of the Report}
+The primary purpose of this report is to analyze the WDBC dataset using advanced data visualization techniques to derive meaningful insights about breast cancer diagnoses. By employing R programming and packages like ggplot2, this report aims to create high-quality visualizations that effectively communicate the underlying patterns in the data.
+
+\subsection{Structure of the Report}
+This report is organized into several key sections:
+\begin{itemize}
+\item Literature Review: A survey of existing research on breast cancer and the role of data visualization in medical data analysis.
+\item Motivation and Objectives: An overview of the selected dataset, the rationale behind its selection, and the formulation of research questions.
+\item Experimental Results: Presentation of findings through visualizations, accompanied by detailed analyses.
+\item Summary: A synthesis of the report's findings, conclusions, and recommendations for future research.
+\end{itemize}
+
+\newpage
+\section{Literature Review}
+
+\subsection{Background and Dataset Origins}
+The Wisconsin Diagnostic Breast Cancer (WDBC) dataset, created by Dr. William H. Wolberg, W. Nick Street, and Olvi L. Mangasarian, is a vital resource for applying machine learning techniques to breast cancer diagnosis \cite{Wolberg1995}. Compiled in the early 1990s, the dataset includes 569 instances characterized by 32 attributes.
+
+\subsection{Machine Learning for Breast Cancer Diagnosis}
+Machine learning has transformed breast cancer diagnosis by enhancing the accuracy and efficiency of data analysis. Notable studies, such as that of Mangasarian et al. \cite{Mangasarian1995}, employed linear programming to achieve high diagnostic accuracy by optimizing feature selection and classification. The introduction of ensemble methods, like the Random Forest algorithm \cite{Breiman2001}, has further improved predictive performance on the WDBC dataset, showcasing the significance of feature interactions in clinical applications.
+
+\subsection{Notable Contributions and Accuracy}
+The WDBC dataset has facilitated numerous advancements in breast cancer diagnosis. Wolberg et al. \cite{Wolberg1995} demonstrated that computer-derived nuclear features could accurately distinguish malignant from benign cases, achieving over 97\% diagnostic accuracy. More recent research by Ahmed et al. \cite{Ahmed2020} has shown that convolutional neural networks (CNNs) can surpass traditional models in classification accuracy, highlighting the potential of deep learning to capture complex data patterns.
+
+\subsection{Broader Impact on Breast Cancer Research}
+The success of the WDBC dataset has influenced a wide range of breast cancer studies. The foundational work by Wolberg et al. \cite{Wolberg1995} laid the groundwork for integrating machine learning with image analysis to predict patient outcomes. This dataset has also encouraged collaboration between data scientists and medical professionals, promoting interdisciplinary approaches that enhance diagnostic practices and patient care in breast cancer research.
+
+\newpage
+\section{Motivation and Objectives}
+
+The primary motivation behind this report is to leverage the Wisconsin Diagnostic Breast Cancer (WDBC) dataset to enhance the understanding of breast cancer characteristics through visual data exploration. Given the dataset's rich array of features, effective visualizations can reveal critical insights into the underlying patterns and relationships among variables. 
+
+The objectives of this report are as follows:
+
+\begin{itemize}
+    \item To perform detailed visual analyses of the dataset, highlighting significant features that differentiate malignant and benign tumors.
+    \item To answer key research questions, including:
+    \begin{enumerate}
+        \item What are the distinguishing characteristics between malignant and benign tumors?
+        \item Which features demonstrate the highest correlation with the diagnosis?
+        \item How do different tumor characteristics relate to each other visually?
+        \item What patterns can be observed in the distribution of tumor sizes and shapes?
+        \item Is the dataset feasible for deriving meaningful insights based on visualizations?
+    \end{enumerate}
+    \item To draw conclusions from the visualizations, summarizing the key findings and their implications for breast cancer diagnosis and research.
+\end{itemize}
+
+
+\newpage
+\section{Experimental Results}
+
+\subsection{Overview of the Dataset}
+The Wisconsin Diagnostic Breast Cancer (WDBC) dataset consists of 569 instances, each representing a case of breast cancer diagnosis. The dataset contains 32 attributes, including ID, Diagnosis, and 30 real-valued features.
+
+The attributes can be categorized as follows:
+
+\begin{enumerate}
+    \item ID number
+    \item Diagnosis (M = malignant, B = benign)
+    \item Real-valued features (computed for each cell nucleus):
+    \begin{enumerate}
+        \item Radius (mean of distances from center to points on the perimeter)
+        \item Texture (standard deviation of gray-scale values)
+        \item Perimeter
+        \item Area
+        \item Smoothness (local variation in radius lengths)
+        \item Compactness (perimeter² / area - 1.0)
+        \item Concavity (severity of concave portions of the contour)
+        \item Concave points (number of concave portions of the contour)
+        \item Symmetry
+        \item Fractal dimension ("coastline approximation" - 1)
+    \end{enumerate}
+\end{enumerate}
+
+The mean, standard error, and "worst" (largest mean of the three largest values) measurements for these features contribute to the dataset's complexity, allowing for thorough exploratory and correlation analysis.
+
+\subsection{Data Preprocessing}
+Data preprocessing is a crucial step in preparing the Wisconsin Diagnostic Breast Cancer (WDBC) dataset for analysis. This phase ensures that the data is clean, consistent, and suitable for visualization. The following steps were taken during the preprocessing stage:
+
+\begin{itemize}
+\item \textbf{Importing the Libraries and Dataset}:
+ At first, the libraries needed are imported. The libraries used are listed below:
+    \begin{enumerate}
+       \item \texttt{readr}: Used for reading the dataset.
+       \item \texttt{plotly}: Used for creating interactive visualizations.
+       \item \texttt{tidyr}: Used for data manipulation and transformation.
+       \item \texttt{ggplot2}: Used for creating static visualizations based on the Grammar of Graphics.
+       \item \texttt{reshape2}: Used for reshaping data between wide and long formats.
+    \end{enumerate}
+\end{itemize}
+```{r, echo=FALSE, include=FALSE}
+library(readr)
+library(plotly)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+library(tidyr)
+```
+
+After importing the libraries the dataset was imported, below is the code of importing dataset:
+\vspace{0.5cm}
+```{r, include=FALSE}
+df <- read_csv("breastcancer/wdbc.data", show_col_types = FALSE,
+    col_names = FALSE)
+```
+\vspace{0.5cm}
+
+\newpage
+\begin{itemize}
+\item \textbf{Checking dimension and naming the columns:}
+The dimension of the dataset was (569, 32). While looking at the dataset there were no column names so by seeing the information about the dataset, the columns name were changed accordingly.
+These were the changes made:
+\begin{enumerate}
+    \item \textbf{ID} - ID number
+    \item \textbf{Diagnosis} - Diagnosis (M = Malignant, B = Benign)
+    
+    \item \textbf{Mean Features:}
+    \begin{enumerate}
+        \item \textbf{Radius\_Mean} - Mean radius
+        \item \textbf{Texture\_Mean} - Mean texture
+        \item \textbf{Perimeter\_Mean} - Mean perimeter
+        \item \textbf{Area\_Mean} - Mean area
+        \item \textbf{Smoothness\_Mean} - Mean smoothness
+        \item \textbf{Compactness\_Mean} - Mean compactness
+        \item \textbf{Concavity\_Mean} - Mean concavity
+        \item \textbf{Concave\_Points\_Mean} - Mean concave points
+        \item \textbf{Symmetry\_Mean} - Mean symmetry
+        \item \textbf{Fractal\_Dimension\_Mean} - Mean fractal dimension
+    \end{enumerate}
+    
+    \item \textbf{Standard Error Features:}
+    \begin{enumerate}
+        \item \textbf{Radius\_SE} - Radius standard error
+        \item \textbf{Texture\_SE} - Texture standard error
+        \item \textbf{Perimeter\_SE} - Perimeter standard error
+        \item \textbf{Area\_SE} - Area standard error
+        \item \textbf{Smoothness\_SE} - Smoothness standard error
+        \item \textbf{Compactness\_SE} - Compactness standard error
+        \item \textbf{Concavity\_SE} - Concavity standard error
+        \item \textbf{Concave\_Points\_SE} - Concave points standard error
+        \item \textbf{Symmetry\_SE} - Symmetry standard error
+        \item \textbf{Fractal\_Dimension\_SE} - Fractal dimension standard error
+    \end{enumerate}
+    
+    \item \textbf{"Worst" Features:}
+    \begin{enumerate}
+        \item \textbf{Radius\_Worst} - Worst radius
+        \item \textbf{Texture\_Worst} - Worst texture
+        \item \textbf{Perimeter\_Worst} - Worst perimeter
+        \item \textbf{Area\_Worst} - Worst area
+        \item \textbf{Smoothness\_Worst} - Worst smoothness
+        \item \textbf{Compactness\_Worst} - Worst compactness
+        \item \textbf{Concavity\_Worst} - Worst concavity
+        \item \textbf{Concave\_Points\_Worst} - Worst concave points
+        \item \textbf{Symmetry\_Worst} - Worst symmetry
+        \item \textbf{Fractal\_Dimension\_Worst} - Worst fractal dimension
+    \end{enumerate}
+\end{enumerate}
+\end{itemize}
+```{r, echo=FALSE, include=FALSE}
+colnames(df) <- c(
+  "ID",                            # ID number
+  "Diagnosis",                     # Diagnosis (M = malignant, B = benign)
+  
+  # Mean features (fields 3-12)
+  "Radius_Mean",                   # Mean radius
+  "Texture_Mean",                  # Mean texture
+  "Perimeter_Mean",                # Mean perimeter
+  "Area_Mean",                     # Mean area
+  "Smoothness_Mean",               # Mean smoothness
+  "Compactness_Mean",              # Mean compactness
+  "Concavity_Mean",                # Mean concavity
+  "Concave_Points_Mean",           # Mean concave points
+  "Symmetry_Mean",                 # Mean symmetry
+  "Fractal_Dimension_Mean",        # Mean fractal dimension
+  
+  # Standard error features (fields 13-22)
+  "Radius_SE",                     # Radius standard error
+  "Texture_SE",                    # Texture standard error
+  "Perimeter_SE",                  # Perimeter standard error
+  "Area_SE",                       # Area standard error
+  "Smoothness_SE",                 # Smoothness standard error
+  "Compactness_SE",                # Compactness standard error
+  "Concavity_SE",                  # Concavity standard error
+  "Concave_Points_SE",             # Concave points standard error
+  "Symmetry_SE",                   # Symmetry standard error
+  "Fractal_Dimension_SE",          # Fractal dimension standard error
+  
+  # "Worst" features (fields 23-32)
+  "Radius_Worst",                  # Worst radius
+  "Texture_Worst",                 # Worst texture
+  "Perimeter_Worst",               # Worst perimeter
+  "Area_Worst",                    # Worst area
+  "Smoothness_Worst",              # Worst smoothness
+  "Compactness_Worst",             # Worst compactness
+  "Concavity_Worst",               # Worst concavity
+  "Concave_Points_Worst",          # Worst concave points
+  "Symmetry_Worst",                # Worst symmetry
+  "Fractal_Dimension_Worst"        # Worst fractal dimension
+)
+
+```
+
+
+
+```{r, echo=FALSE, include=FALSE}
+df <- df %>%
+  mutate(Diagnosis = recode(Diagnosis, 
+                             M = "Malignant", 
+                             B = "Benign"))
+```
+
+\begin{itemize}
+\item \textbf{Handling missing values:}
+While checking the missing  values, no missing values were found. So there was no need to do any work.
+\end{itemize}
+
+```{r, echo=FALSE, include=FALSE}
+# Check for missing values in the dataset
+sum(is.na(df))  # Total number of missing values
+
+# Alternatively, you can check which columns contain missing values:
+colSums(is.na(df))
+```
+
+\begin{itemize}
+\item \textbf{Handling the Outliers:}
+In  the dataset there were many outliers but considering it was the cancer dataset the high variability was feasible but still outliers were visualized. Due to the large difference in values of columns the dataset, it had to be scaled for visualizing the outliers. And here no outliers were removed because there can be extreme cases in cancer data like this.
+\end{itemize}
+\vspace{0.5cm}
+```{r, echo=FALSE,fig.width=7, fig.height=3.5}
+df %>%
+    select(-c(ID, Diagnosis)) %>%
+    gather(key = "variable", value = "value") %>%
+    ggplot(aes(x = variable, y = value)) +
+    geom_boxplot() +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1),
+          plot.title = element_text(hjust = 0.5)) +  
+    labs(title = "Boxplots of Numeric Columns Before Scaling", x = "Variables", y = "Values")
+
+```
+\begin{center} 
+\textit{Fig: Boxplot showing the data distribution before scaling.}
+\end{center}
+
+\vspace{0.5cm}
+```{r, echo=FALSE,fig.width=7, fig.height=3.5}
+# Min-Max normalization function
+normalize <- function(x) {
+    return((x - min(x)) / (max(x) - min(x)))
+}
+
+# Apply Min-Max normalization to the dataset
+normalized_df <- df %>%
+    select(-c(ID, Diagnosis)) %>%
+    mutate(across(everything(), normalize))  # Apply Min-Max normalization
+
+# Convert to long format for visualization
+normalized_long_df <- normalized_df %>%
+    gather(key = "variable", value = "value")
+
+# Plot boxplots with normalization applied
+p_normalized <- ggplot(normalized_long_df, aes(x = variable, y = value)) +
+    geom_boxplot() +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1),
+          plot.title = element_text(hjust = 0.5)) +  
+    labs(title = "Boxplots of Normalized Numeric Columns", x = "Variables", y = "Normalized Values")
+
+
+p_normalized
+
+```
+\begin{center} 
+\textit{Fig: Boxplot showing the data distribution after scaling.}
+\end{center}
+
+
+
+\subsection{Initial Data Exploration}
+
+\subsubsection{Distribution of diagnoses (Benign vs. Malignant)}
+To understand the class distribution in the dataset, a bar plot is created to display the counts of benign and malignant cases.
+
+\vspace{0.5cm}
+```{r, echo=FALSE, fig.width=7, fig.height=3.6}
+p <- ggplot(df, aes(x = Diagnosis, fill = Diagnosis)) +
+  geom_bar() +
+  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.1) +  
+  labs(title = "Distribution of Tumor Diagnosis", x = "Diagnosis", y = "Count") +
+  theme(plot.title = element_text(hjust = 0.5), 
+        legend.title = element_blank())
+p
+```
+\begin{center} 
+\textit{Fig: Barchat showing the count of Diagnosis Benign and Malignant}
+\end{center}
+
+\textbf{Interpretation:}\
+The distribution of tumor diagnoses reveals that benign cases (357) significantly outnumber malignant cases (212), indicating a notable imbalance. This disparity suggests that models trained on this dataset may face challenges related to class imbalance, potentially impacting the accuracy of diagnostic predictions. Methods like sampling is necessary if the model is trained. 
+
+
+\subsubsection{Summary Statistics and Highlighting key features}
+
+```{r, echo=FALSE, include=FALSE}
+# Calculate summary statistics
+summary_stats <- summary(df)
+
+# Display summary statistics
+print(summary_stats)
+
+```
+
+```{r, echo=FALSE, include=FALSE}
+# Load dplyr for data manipulation
+library(dplyr)
+
+# Calculate summary statistics by diagnosis
+summary_by_class <- df %>%
+  group_by(Diagnosis) %>%
+  summarise(across(everything(), list(mean = mean, sd = sd, min = min, max = max, median = median), na.rm = TRUE))
+
+# Display summary statistics by class
+print(summary_by_class)
+
+```
+Here the summary statistics by diagnosis is seen so that we can understand which features play major role in finding the tumors. Also by seeing statistic summary and columns these are they key Features: 
+\begin{enumerate}
+    \item \textbf{Radius Mean:}
+    \begin{itemize}
+        \item \textbf{Importance:} Significant difference (12.15 for benign vs. 17.46 for malignant) highlights tumor size as a critical indicator of malignancy.
+        \item \textbf{Why Others Are Not Key:} Features like Symmetry and Fractal Dimension show minimal variation and do not significantly differentiate tumor types.
+    \end{itemize}
+
+    \item \textbf{Texture Mean:}
+    \begin{itemize}
+        \item \textbf{Importance:} Higher mean in malignant tumors (21.60) indicates greater texture variation, aiding in tumor identification.
+        \item \textbf{Why Others Are Not Key:} Metrics like Area Perimeter Ratio have less distinct differences between benign and malignant cases.
+    \end{itemize}
+
+    \item \textbf{Perimeter Mean:}
+    \begin{itemize}
+        \item \textbf{Importance:} Clear distinction (78.08 vs. 115.37) emphasizes perimeter size's relevance in classification.
+        \item \textbf{Why Others Are Not Key:} Features like Compactness may have some variation, but not enough to warrant them as critical for differentiation.
+    \end{itemize}
+
+    \item \textbf{Area Mean:}
+    \begin{itemize}
+        \item \textbf{Importance:} A substantial increase (458.40 for benign vs. 992.10 for malignant) reinforces size as a diagnostic feature.
+        \item \textbf{Why Others Are Not Key:} Other shape descriptors like Circularity do not show significant differences.
+    \end{itemize}
+
+    \item \textbf{Concavity Mean:}
+    \begin{itemize}
+        \item \textbf{Importance:} Higher mean in malignant tumors (0.1514) indicates irregular shapes, which are typical of cancerous growths.
+        \item \textbf{Why Others Are Not Key:} Simpler features like Smoothness have minor differences that do not contribute significantly to diagnosis.
+    \end{itemize}
+
+    \item \textbf{Smoothness Mean:}
+    \begin{itemize}
+        \item \textbf{Importance:} Slightly higher in malignant cases (0.1029) suggests rougher edges, providing additional diagnostic information.
+        \item \textbf{Why Others Are Not Key:} Features like Symmetric Shape do not show substantial differences, reducing their diagnostic relevance.
+    \end{itemize}
+
+    \item \textbf{Compactness Mean:}
+    \begin{itemize}
+        \item \textbf{Importance:} Higher values in malignant tumors (0.0737) indicate denser structures, supporting their malignancy.
+        \item \textbf{Why Others Are Not Key:} Features like Symmetry show little variation and fail to aid in tumor classification.
+    \end{itemize}
+\end{enumerate}
+
+For other features which doesn't play significant role and are related can be reduced using PCA and other techniques.
+
+\subsection{Feature Analysis}
+Now we have key features let's divide it according to tumor size, surface and shape and visualize them.
+
+\subsubsection{Tumor Size Characteristics}
+\textbf{Tumor Radius Mean:}
+The average distance from the center of the tumor to its boundary. It provides an indication of the overall size of the tumor, with malignant tumors typically having larger radius values compared to benign tumors. Larger sizes are often associated with malignancy, making this a crucial feature in tumor classification.
+```{r, echo=FALSE}
+# Boxplot for Tumor Radius by Diagnosis
+ggplot(df, aes(x = Diagnosis, y = Radius_Mean, fill = Diagnosis)) +
+  geom_boxplot() +
+  labs(title = "Tumor Radius by Diagnosis", x = "Diagnosis", y = "Radius Mean") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+\begin{center} 
+\textit{Fig: Boxplot comparing mean radius of tumors between benign and malignant cases.}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Interpretation:}\
+\begin{enumerate}
+    \item \textbf{Median Size:} Malignant tumors have a significantly larger median radius than benign tumors.
+    \item \textbf{Variability:} Malignant tumors show greater size variability, indicated by a wider interquartile range (IQR) and longer whiskers.
+    \item \textbf{Outliers:} There are more outliers in the malignant group, with some tumors having much larger radii.
+    \item \textbf{Consistency:} Benign tumors have a more concentrated distribution, suggesting they are generally smaller and more consistent in size.
+    \item \textbf{Diagnostic Importance:} Tumor size is a key differentiator between benign and malignant tumors.
+\end{enumerate}
+
+```{r, echo=FALSE}
+# Histogram for Tumor Radius
+ggplot(df, aes(x = Radius_Mean, fill = Diagnosis)) +
+  geom_histogram(alpha = 0.7, position = 'identity', bins = 30) +
+  labs(title = "Tumor Radius Distribution", x = "Radius Mean", y = "Count") +
+  facet_wrap(~ Diagnosis) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+\begin{center} 
+\textit{Fig: Histogram showing the distribution of mean radius.}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Interpretation:}\
+\begin{enumerate}
+    \item \textbf{Right-Skewed Distribution:} Both groups exhibit right-skewed distributions, indicating most tumors are smaller.
+    \item \textbf{Average Size:} Malignant tumors tend to have larger radii on average compared to benign tumors.
+    \item \textbf{Size Spread:} Malignant tumors show a wider range of sizes, indicating greater variability.
+    \item \textbf{Overlap:} Some size overlap exists, but larger malignant tumors are evident.
+    \item \textbf{Relevance:} The histogram reinforces that tumor radius is crucial for distinguishing between benign and malignant tumors.
+\end{enumerate}
+
+\vspace{0.5cm}
+\textbf{Tumor Perimeter:}
+The perimeter is directly related to tumor size, which is often larger for malignant tumors. By comparing the mean perimeter values between benign and malignant diagnoses, we can identify whether there is a significant difference in the size of the tumors.
+
+```{r, echo=FALSE}
+# Density plot for Tumor Perimeter by Diagnosis
+ggplot(df, aes(x = Perimeter_Mean, fill = Diagnosis)) +
+  geom_density(alpha = 0.7) +
+  labs(title = "Tumor Perimeter Density by Diagnosis", x = "Perimeter Mean", y = "Density") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+\begin{center} 
+\textit{Fig: Density plot of Perimeter Mean.}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Interpretation:}\
+The density plot, "Tumor Perimeter Density by Diagnosis," reveals the following key observations:
+\begin{enumerate}
+    \item \textbf{Distribution Shape:} Both benign and malignant tumors show a unimodal distribution, with malignant tumors having a peak shifted slightly to the right.
+    \item \textbf{Overlapping Regions:} Significant overlap exists between the distributions, indicating that perimeter alone may not serve as a reliable diagnostic marker.
+    \item \textbf{Tail:} The right tail of the malignant distribution is extended, suggesting some malignant tumors have exceptionally large perimeters.
+\end{enumerate}
+
+\textbf{Conclusion:} While malignant tumors generally have larger perimeters, the overlap with benign tumors indicates that perimeter should be evaluated alongside other features for accurate diagnosis.
+
+
+```{r, echo=FALSE}
+# Scatter plot of Perimeter vs Radius
+ggplot(df, aes(x = Radius_Mean, y = Perimeter_Mean, color = Diagnosis)) +
+  geom_point(alpha = 0.7) +
+  labs(title = "Perimeter vs Radius by Diagnosis", x = "Radius Mean", y = "Perimeter Mean") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+\begin{center} 
+\textit{Fig: Scatterplot between Perimeter and Radius by Diagnosis.}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Interpretation:}\
+The scatterplot, "Perimeter vs. Radius by Diagnosis," presents these observations:
+\begin{enumerate}
+    \item \textbf{Positive Correlation:} A strong positive correlation exists between perimeter and radius for both tumor types.
+    \item \textbf{Separation:} Malignant tumors exhibit slightly larger perimeters for a given radius compared to benign tumors, suggesting some separation.
+    \item \textbf{Overlapping Regions:} There remains overlap, especially in lower radius values, indicating perimeter alone is not definitive for diagnosis.
+\end{enumerate}
+
+\textbf{Conclusion:} The positive correlation between perimeter and radius suggests their combined use may enhance diagnostic accuracy, though further analysis is needed to assess their predictive power.
+
+\textbf{Tumor Area:}
+The tumor area refers to the physical size of the tumor, typically measured in square units. It provides critical information regarding the extent of the tumor, which can be an important factor in cancer diagnosis and treatment.
+
+```{r, echo=FALSE}
+ggplot(df, aes(x = Diagnosis, y = Area_Mean, fill = Diagnosis)) +
+  geom_violin(trim = FALSE) +
+  labs(title = "Tumor Area Distribution by Diagnosis", x = "Diagnosis", y = "Area Mean") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+\begin{center} 
+\textit{Fig: Viplinplot of Area mean by Diagnosis.}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Interpretation:}\
+The violin plots comparing tumor area for benign and malignant diagnoses reveal the following key observations:
+\begin{enumerate}
+    \item \textbf{Median Area:} Malignant tumors generally exhibit a larger median area compared to benign tumors, indicating that malignant tumors are, on average, physically larger.
+    \item \textbf{Distribution Shape:} Both distributions are right-skewed, with longer tails, suggesting the presence of tumors with exceptionally large areas in both groups.
+    \item \textbf{Overlapping Regions:} There is noticeable overlap between the areas of benign and malignant tumors, particularly in the lower area range, indicating that some benign tumors may have similar sizes to malignant tumors.
+\end{enumerate}
+
+\textbf{Conclusion:} While the median area of malignant tumors is larger, suggesting a potential diagnostic indicator, the overlap in tumor area between the two groups indicates that area alone may not suffice for reliable diagnosis. 
+
+\subsubsection{Tumor Surface Features}
+\textbf{Texture:}
+The density plot comparing tumor texture for benign and malignant diagnoses reveals the following key observations:
+
+```{r, echo=FALSE,fig.width=7, fig.height=3.6}
+ggplot(df, aes(x = Texture_Mean, fill = Diagnosis)) +
+  geom_density(alpha = 0.6) +
+  labs(title = "Tumor Texture Density by Diagnosis", 
+       x = "Texture Mean", 
+       y = "Density") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_manual(values = c("Benign" = "blue", "Malignant" = "red"))
+```
+\begin{center} 
+\textit{Fig: Density plot of Texture mean by Diagnosis.}
+\end{center}
+
+\vspace{0.5cm}
+
+\textbf{Smoothness}\
+```{r, echo=FALSE, fig.width=7, fig.height=3.6}
+ggplot(df, aes(x = Smoothness_Mean, fill = Diagnosis)) +
+  geom_density(alpha = 0.6) +
+  labs(title = "Tumor Smoothness Density by Diagnosis", 
+       x = "Smoothness Mean", 
+       y = "Density") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_manual(values = c("Benign" = "blue", "Malignant" = "red"))
+```
+\begin{center} 
+\textit{Fig: Density plot of smoothness mean by Diagnosis.}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Interpretation:}\
+
+\begin{itemize}
+    \item \textbf{Distribution Shape:} Both benign and malignant tumors exhibit a similar unimodal distribution, with a single peak. However, the peak for benign tumors is shifted slightly to the left compared to the peak for malignant tumors.
+    \item \textbf{Overlapping Regions:} There is significant overlap between the two distributions, especially in the middle range of texture and smoothness values. This indicates that texture and smoothness alone may not be reliable diagnostic markers, as some benign tumors can have similar characteristics to malignant tumors.
+    \item \textbf{Tail:} The tail on the right side of the distribution for malignant tumors is slightly more extended than the tail for benign tumors, suggesting that there are some malignant tumors with exceptionally high texture and smoothness values.
+\end{itemize}
+
+\textbf{Conclusion:}
+
+Based on the density plots, malignant tumors tend to have higher texture and smoothness values on average compared to benign tumors. However, the significant overlap between the distributions indicates that neither texture nor smoothness alone can definitively distinguish between benign and malignant tumors.
+
+
+\subsubsection{Tumor Shape Features}
+
+\textbf{Concavity:}
+Concavity measures the irregularity of a tumor's edges, with higher values indicating more jagged, malignant tumors and lower values suggesting smoother, benign tumors.
+
+```{r, echo=FALSE}
+ggplot(df, aes(x = Concavity_Mean, fill = Diagnosis)) +
+  geom_density(alpha = 0.7) +
+  labs(title = "Tumor Concavity Density by Diagnosis", x = "Concavity Mean", y = "Density") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+\begin{center} 
+\textit{Fig: Density plot of Concavity mean by Diagnosis.}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Interpretation:}\
+The density plot illustrates notable differences in tumor concavity between benign and malignant tumors:
+
+\begin{enumerate}
+    \item \textbf{Distribution Shape}: Both tumor types exhibit unimodal distributions; however, benign tumors have a peak that is slightly to the left, indicating that benign tumors tend to have lower concavity values on average compared to malignant tumors.
+
+    \item \textbf{Overlapping Regions}: There is significant overlap in concavity values, particularly in the mid-range. This suggests that concavity alone may not serve as a reliable diagnostic marker, as certain benign tumors can exhibit concavity values comparable to those of malignant tumors.
+
+    \item \textbf{Tail Analysis}: The right tail of the malignant tumor distribution is more extended than that of benign tumors, indicating the presence of malignant tumors with exceptionally high concavity values. This characteristic may suggest irregular growth patterns often associated with malignancy.
+\end{enumerate}
+
+\textbf{Conclusion}: While concavity shows potential as a distinguishing feature between benign and malignant tumors, the considerable overlap in values indicates that it should be used in conjunction with other diagnostic markers for more accurate tumor classification.
+
+\textbf{Compactness:}
+Compactness is a measure of how densely packed the cells of a tumor are. It is an important factor in determining the prognosis of a cancer patient. Compactness is used to classify tumors into different types, such as solid or non-solid. Solid tumors tend to have higher compactness and can be more difficult to treat. Non-solid tumors tend to be less dense and can often be treated more easily.
+
+```{r, echo=FALSE}
+ggplot(df, aes(x = Diagnosis, y = Compactness_Mean, fill = Diagnosis)) +
+    geom_boxplot() +
+    labs(
+      title = "Comparison of Tumor Compactness (Mean) between Benign and Malignant Tumors",
+      x = "Diagnosis",
+      y = "Mean Compactness"
+    ) +
+    scale_fill_manual(values = c("lightblue", "red")) +
+    theme_minimal()
+```
+\begin{center} 
+\textit{Fig: Box plot of Compactness mean by Diagnosis.}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Interpretation:}\
+\begin{itemize}
+    \item \textbf{Median Compactness:} Malignant tumors generally exhibit a higher median compactness compared to benign tumors, indicating that malignant tumors are, on average, more compact.
+    \item \textbf{IQR (Interquartile Range):} The IQR for malignant tumors is slightly larger than that for benign tumors, suggesting a greater variability in compactness values among malignant tumors.
+    \item \textbf{Outliers:} Both tumor groups contain outliers; however, malignant tumors display more outliers, indicating a wider range of compactness.
+\end{itemize}
+
+\textbf{Conclusion:} The boxplot illustrates a distinct difference in tumor compactness between benign and malignant diagnoses. Malignant tumors are generally more compact and show a wider range of compactness values compared to benign tumors. Nevertheless, the overlap between the two groups indicates that some benign tumors may also be relatively compact, while some malignant tumors could be less compact. Thus, further investigation is needed to evaluate the reliability of tumor compactness as a predictive marker for diagnosis.
+
+
+\textbf{Symmetry:}
+Symmetry is used in medical imaging and analysis to help assess the nature of a tumor, as malignant tumors are often less symmetrical than benign ones.
+
+```{r, echo=FALSE}
+ggplot(df, aes(x = Diagnosis, y = Symmetry_Mean, fill = Diagnosis)) +
+    geom_boxplot() +
+    labs(
+      title = "Comparison of Tumor Symmetry (Mean) between Benign and Malignant Tumors",
+      x = "Diagnosis",
+      y = "Mean Symmetry"
+    ) +
+    scale_fill_manual(values = c("lightblue", "red")) +
+    theme_minimal()
+```
+\begin{center} 
+\textit{Fig: Boxplot of Symmetry mean by Diagnosis.}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Interpretation:}\
+\begin{itemize}
+    \item \textbf{Median Symmetry:} Malignant tumors generally have a lower median symmetry compared to benign tumors, indicating that malignant tumors are less symmetrical on average.
+    \item \textbf{IQR (Interquartile Range):} The IQR for malignant tumors is slightly larger than that for benign tumors, suggesting a greater variability in the symmetry of malignant tumors.
+    \item \textbf{Outliers:} Both groups exhibit outliers, but malignant tumors have more, indicating a wider range of symmetry values.
+\end{itemize}
+
+\textbf{Conclusion:} The boxplot demonstrates a significant difference in tumor symmetry between benign and malignant diagnoses. Malignant tumors are typically less symmetrical and show greater variability in symmetry compared to benign tumors.
+
+\subsection{Correlation Analysis}
+```{r, echo=FALSE, include=FALSE}
+# Compute the correlation matrix excluding 'ID' and 'Diagnosis'
+correlation_matrix <- cor(df[, 3:32])
+# Melt the correlation matrix for visualization
+melted_cormat <- melt(correlation_matrix)
+```
+
+```{r,echo=FALSE, fig.width=10, fig.height=8}
+ggplot(data = melted_cormat, aes(x = Var1, y = Var2, fill = value)) + 
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                       midpoint = 0, limit = c(-1, 1), space = "Lab", 
+                       name = "Correlation") +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 9, hjust = 1),
+        axis.text.y = element_text(size = 9),
+        plot.margin = margin(10)) +  # Adjust plot margins
+  coord_fixed() +
+  labs(title = "Correlation Matrix of Tumor Features", x = "", y = "")+
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+\begin{center} 
+\textit{Fig: Heatmap of all numerical features}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Observation:}\
+
+\begin{enumerate}
+    \item \textbf{Strong Positive Correlations:}
+    \begin{itemize}
+        \item Area, Perimeter, and Radius features are highly positively correlated across all statistical measures (Worst, SE, Mean).
+        \item Concavity, Concave Points, and Compactness show strong positive correlations with each other.
+    \end{itemize}
+    
+    \item \textbf{Moderate Correlations:}
+    \begin{itemize}
+        \item Texture features show moderate positive correlations with most other features.
+        \item Smoothness has generally weaker correlations compared to other features.
+    \end{itemize}
+    
+    \item \textbf{Some Negative Correlations:}
+    \begin{itemize}
+        \item Fractal Dimension features exhibit some negative correlations, particularly with Area, Perimeter, and Radius.
+    \end{itemize}
+    
+    \item \textbf{Patterns Across Statistical Measures:}
+    \begin{itemize}
+        \item Similar features (e.g., Area\_Worst, Area\_SE, Area\_Mean) show strong correlations with each other.
+        \item Symmetry features have relatively weaker correlations overall compared to other features.
+    \end{itemize}
+\end{enumerate}
+
+\vspace{0.5cm}
+\textbf{Interpretation:}\
+
+
+\begin{enumerate}
+    \item \textbf{Feature Redundancy:} The strong correlations between Area, Perimeter, and Radius suggest these features may be redundant, indicating that tumors tend to grow proportionally in multiple dimensions.
+    
+    \item \textbf{Tumor Complexity:} The high correlations between Concavity, Concave Points, and Compactness may reflect the complex, irregular shapes of malignant tumors.
+    
+    \item \textbf{Fractal Dimension Uniqueness:} The negative correlations of Fractal Dimension with size-related features (Area, Perimeter, Radius) could indicate that this feature captures unique information about tumor complexity independent of size.
+    
+    \item \textbf{Texture Independence:} The moderate correlations of Texture features suggest this characteristic provides somewhat independent information from other features, potentially valuable for tumor classification.
+    
+    \item \textbf{Multi-faceted Tumor Properties:} The varying correlation strengths across different features underscore the complex nature of tumors, with multiple semi-independent characteristics.
+    
+    \item \textbf{Potential for Dimensionality Reduction:} Given the strong correlations between many features, dimensionality reduction techniques could be effective in creating a more concise set of tumor descriptors while retaining most of the information.
+    
+    \item \textbf{Implications for Modeling:} The correlation patterns suggest that using all features in predictive models might introduce multicollinearity. Feature selection or regularization techniques may be beneficial in building robust tumor classification or prognostic models.
+\end{enumerate}
+
+
+\newpage
+\section{Summary of Key Findings}
+
+\textbf{Tumor Size Characteristics:}
+\begin{itemize}
+    \item Malignant tumors typically present with larger radius, perimeter, and area compared to benign tumors.
+    \item A significant overlap in size exists between benign and malignant tumors, particularly for smaller tumors.
+    \item Tumor size alone is not sufficient for a definitive diagnosis.
+\end{itemize}
+
+\textbf{Tumor Surface Features:}
+\begin{itemize}
+    \item On average, malignant tumors exhibit higher texture and smoothness values.
+    \item There is considerable overlap in texture and smoothness distributions between benign and malignant tumors.
+\end{itemize}
+
+\textbf{Tumor Shape Features:}
+\begin{itemize}
+    \item Malignant tumors generally show higher concavity and compactness.
+    \item These tumors tend to be less symmetrical than their benign counterparts.
+    \item While shape features may help distinguish tumor types, overlapping characteristics are evident.
+\end{itemize}
+
+\textbf{Feature Correlations:}
+\begin{itemize}
+    \item Strong positive correlations are observed among size-related features (radius, perimeter, area).
+    \item Concavity, concave points, and compactness demonstrate high inter-correlation.
+    \item The fractal dimension reveals some negative correlations with size-related features.
+\end{itemize}
+
+\newpage
+\section{Conclusion}
+
+\begin{enumerate}
+    \item \textbf{Multi-Factor Approach:} No single feature can definitively distinguish between benign and malignant tumors. A comprehensive combination of size, surface, and shape characteristics is essential for reliable classification.
+    
+    \item \textbf{Importance of Size:} While not conclusive, tumor size (radius, perimeter, area) remains a crucial factor in tumor assessment, with malignant tumors generally exhibiting larger dimensions.
+    
+    \item \textbf{Shape Complexity:} Features such as concavity and compactness provide valuable insights into tumor nature, reflecting the complex structures typical of malignant growths.
+    
+    \item \textbf{Variability in Malignant Tumors:} Malignant tumors show greater variability across multiple features, suggesting a wider range of possible presentations.
+    
+    \item \textbf{Potential for Dimensionality Reduction:} The strong correlations among certain features indicate potential redundancy, highlighting the benefits of dimensionality reduction techniques for more concise tumor descriptors.
+    
+    \item \textbf{Need for Advanced Modeling:} The overlapping distributions of features between benign and malignant tumors underline the necessity for sophisticated machine learning models that integrate multiple features for accurate classification.
+    
+    \item \textbf{Clinical Implications:} While the dataset provides valuable insights, clinical diagnosis should encompass additional factors beyond computed features, including medical history, diagnostic tests, and expert clinical judgment.
+    
+    \item \textbf{Future Research Directions:} Further exploration into the relationship between fractal dimension and other features could yield deeper insights into tumor complexity and growth patterns.
+\end{enumerate}
+
+These findings emphasize the intricate nature of breast cancer diagnosis and the significance of a holistic, multi-faceted approach in tumor classification and treatment planning.
+\newpage
+\section{ShinyApp}
+For further visualization you can visit at my shiny app and see more visualization by clicking this link: https://uufp9s-sugam-adhikari.shinyapps.io/breastcancer/
+The shiny app has 4 types of plot:
+\begin{itemize}
+    \item Box  Plot
+    \item Density Plot
+    \item Scatter Plot
+    \item 3D Scatter Plot
+    \item Correlation Plot
+ 
+\end{itemize}
+
+
+\newpage
+
+\addcontentsline{toc}{section}{References} 

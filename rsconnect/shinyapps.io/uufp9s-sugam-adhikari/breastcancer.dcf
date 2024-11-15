@@ -1,0 +1,13 @@
+name: breastcancer
+title: breastcancer
+username: uufp9s-sugam-adhikari
+account: uufp9s-sugam-adhikari
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13071914
+bundleId: 9246754
+url: https://uufp9s-sugam-adhikari.shinyapps.io/breastcancer/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: wdbc.names
